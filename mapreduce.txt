@@ -1,0 +1,188 @@
+1)map and reduce functions to find out number of products sold in each country?
+MAPPER:
+package SalesCountry;
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.*;
+public class SalesMapper extends MapReduceBase implements Mapper <LongWritable, Text, Text, IntWritable> {
+private final static IntWritable one = new IntWritable(1);
+public void map(LongWritable key, Text value, OutputCollector <Text, IntWritable>
+output, Reporter reporter) throws IOException {
+String valueString = value.toString();
+String[] SingleCountryData = valueString.split(",");
+output.collect(new Text(SingleCountryData[7]), one);
+} }
+
+REDUCE:
+package SalesCountry;
+import java.io.IOException;
+import java.util.*;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapred.*;
+public class SalesCountryReducer extends MapReduceBase implements Reducer<Text,IntWritable, Text, IntWritable> {
+public void reduce(Text t_key, Iterator<IntWritable> values,
+OutputCollector<Text,IntWritable> output, Reporter reporter) throws IOException {
+Text key = t_key;
+int frequencyForCountry = 0;
+while (values.hasNext()) {
+// replace type of value with the actual type of our value
+IntWritable value = (IntWritable) values.next();
+frequencyForCountry += value.get(); \n
+}
+output.collect(key, new IntWritable(frequencyForCountry));
+} }
+
+DRIVER:
+public class SalesCountryDriver {
+    public static void main(String[] args) {
+        JobClient my_client = new JobClient();
+        JobConf job_conf = new JobConf(SalesCountryDriver.class);
+        job_conf.setJobName("SalePerCountry");
+        job_conf.setOutputKeyClass(Text.class);
+        job_conf.setOutputValueClass(IntWritable.class);
+        job_conf.setMapperClass(SalesCountry.SalesMapper.class);
+        job_conf.setReducerClass(SalesCountry.SalesCountryReducer.class);
+        job_conf.setInputFormat(TextInputFormat.class);
+        job_conf.setOutputFormat(TextOutputFormat.class);
+        FileInputFormat.setInputPaths(job_conf, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job_conf, new Path(args[1]));
+        my_client.setConf(job_conf);
+        try {
+            // Run the job 
+            JobClient.runJob(job_conf);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+2)process the data and display the year with maximum average electrical consumption?
+sol:
+public class ProcessUnits{
+public static class E_EMapper extends MapReduceBase implements Mapper<LongWritable,Text,Text,IntWritable>{
+public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) throws IOException{
+String line = value.toString();
+String c = null;
+int consumption;
+StringTokenizer s = new StringTokenizer(line,"\t");
+String year = s.nextToken();
+while(s.hasMoreTokens()){
+c.set=s.nextToken();
+consumption= Integer.parseInt(c);
+output.collect(new Text(year), new IntWritable(consumption));
+}}}
+//Reducer class
+public static class E_EReduce extends MapReduceBase implements Reducer< Text, IntWritable, Text, IntWritable >{
+//Reduce function
+public void reduce(Text key, Iterator <IntWritable> values, OutputCollector>Text, IntWritable> output, Reporter reporter) throws IOException{
+private Map<Text, IntWritable> countMap = new HashMap<>();
+int k= 0; 
+int count = 0;
+for (IntWritable value : values){
+k += value.get();
+count+=1;
+}
+countMap.put(new Text (key), new IntWritable(k/sum));
+int maxValue = Integer.MIN_VALUE;
+for (IntWritable value : countMap.get(key)){
+maxValue = Math.max(maxValue, value.get());
+}
+context.write(key, new IntWritable(maxValue));
+}}
+
+//Driver class\n
+public class ProcessUnits{
+public static void main(String args[])throws Exception{
+JobConf conf = new JobConf(Eleunits.class);
+conf.setJobName("max_eletricityunits");
+conf.setOutputKeyClass(Text.class)
+conf.setOutputValueClass(IntWritable.class);
+conf.setMapperClass(E_EMapper.class);
+conf.setCombinerClass(E_EReduce.class);
+conf.setReducerClass(E_EReduce.class);
+conf.setInputFormat(TextInputFormat.class);
+conf.setOutputFormat(TextOutputFormat.class);
+FileInputFormat.setInputPaths(conf, new Path(args[0]));
+FileOutputFormat.setOutputPath(conf, new Path(args[1]));
+JobClient.runJob(conf);
+}}
+
+
+3)[U321)To write a MapReduce program to search for a specific keyword in a file.
+Input Data:\n
+1001,John,45\n
+1002,Jack,39\n
+1003,Alex,44\n
+1004,Smith,38\n
+1005,Bob,33\n
+sol:-WordSearcher.java\n
+import java.io.IOException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input. TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+Public class WordSearcher{
+public static void main (String[] args) throws IOException,
+InterruptedException, ClassNotFoundException {
+Configuration conf= new Configuration();
+Job job = new Job(conf);
+job.setJarByClass( WordSearcher.class);
+job.setOutputKeyClass(Text.class);
+job.setOutput ValucClass(Text.class);
+job.setMapperClass( WordsearchMapper.class);
+job.set Reducer(Clas( WordSearch Reducer.class);
+job.setInputFormatClass(TextInputFormat.class);
+jobsetOuputforma Clasfs(TextOutputformat.class);
+job.setNumReduceTasks(1);
+job.getConfiguration().set("keyword", "Jack");
+FileInputFormat.setInputPaths(job, new Path(" /mapreduce/student.csv"));
+FileOutputF ormat.setOuputPatb(job, new Path\("/mapreduce/output/search");
+System.exit(job.waitForCompletion(true)? 0: 1);
+}} 
+
+-WordSearchMapper.java\n
+import java.io.IOException;
+import org-apache.hadoop.conf.Configuration;
+import org apache.hadoop.io.IntWritable;
+import org apache.hadoop.io.Long Writable;
+import org.apache.hadoop.io. Text;\n
+import org,apache.hadoop.mapreduce.InputSplit;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+public class WordSearch Mapper extends Mapper<LongWritable, Text, Text, Text>
+static String keyword;
+static int pos =0 ;
+protected void setup(Context context) throws IOException,InterruptedException{
+Configuration configuration = context.getConfiguration();
+keyword = configuration.get("keyword");
+protected void map(Long Writable key, Text value, Context context)
+throws IOException, InterruptedException{
+InputSplit i = context.getInputSplit(); // Get the input split for this map.
+FileSplit f= (FileSplit) i;
+String fileName= f.getPathO-getName();
+Integer wordPos;
+pos++;
+if (value.to String().contains(keyword){
+wordPos = value.find(keyword);
+context. write(value, new Text(fileName + ","+ new IntWritable(pos).toString()+","+
+wordPos.to String()));
+}}}  
+
+-WordSearchReducer.java\n
+import java.io.IOException;
+import org.apache.hadoop.io. Text;
+import org-apache.hadoop.mapreduce.Reducer;
+public class WordSearch Reducer extends Reducer<Text, Text, Text, Text>{
+protected void reduce(Text key, Text value, Context context) throws IOException, InterruptedException{
+context.write(key, value);\n
+}} \n
+]
+

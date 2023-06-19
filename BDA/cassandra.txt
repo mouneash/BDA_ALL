@@ -1,0 +1,279 @@
+A)To create a keyspace by the name “Students”
+
+CREATE KEYSPACE Students WITH REPLICATION =
+{
+
+'class':'SimpleStrategy',
+'replication_factor':1
+
+};      
+
+B)TO USE KEYSPACE "Students"
+Use keyspace_name
+eg: USE Students    
+
+
+C)To create a column family or table by the name
+“student_info”.
+
+CREATE TABLE Student_Info
+( RollNo int PRIMARY KEY,
+StudName text,
+DateofJoining timestamp,
+LastExamPercent double
+
+);     
+
+D)PRIMARY KEY:
+Primary key((column_name4,column_name5),column_name6,column_name7)
+
+column _name4 and column _ name5 are the partitioning keys.
+column _name6 and column _ name7 are the clustering columns.
+
+partition key is used to distribute the data in the cable across various nodes that consitute the cluster. The clustering columns are used to store data in ascending order on the disk.     
+
+E)To lookup the names of all tables in the current keyspace, or in all the keyspaces if there is no current keyspace.
+Act:
+DESCRIBE TABLES;
+Outcome:
+cqlsh:students> describe tables;
+student_info
+cqlsh:students>     
+
+F)Objective; To describe the table "student_info" use the below command.
+Act:
+DESCRIBE TABLE student _info;     
+
+G)Insert:
+
+To insert data into the column family “student_info”.
+
+BEGIN BATCH
+INSERT INTO student_info
+(RollNo,StudName,DateofJoining,LastExamPercent
+) VALUES (1,'Michael Storm','2012-03-29', 69.6)
+
+INSERT INTO student_info
+(RollNo,StudName,DateofJoining,LastExamPercent
+) VALUES (2,'Stephen Fox','2013-02-27', 72.5)
+
+APPLY BATCH;      
+
+F1)to view data from table "student_info":
+SELECT * FROM student_info;    
+
+F2)Create Index:
+To create an index on the “studname” column of the “student_info” column family use the following statement.
+
+CREATE INDEX ON student_info(studname);
+
+SELECT * FROM student_info WHERE studname='Stephen Fox';
+SELECT * FROM student_info WHERE RollNo IN(1,2,3);    
+
+H)To use column alias for the column language" in the "student _ info" table. We would like column heading to be "knows language"
+Act:
+SELECT rollno, language AS "knows language" FROM student_info;
+   
+I)Update:
+To update the value held in the “StudName” column of the “student_info”
+column family to “David Sheen” for the record where the RollNo column has value = 2.  
+
+Note: An update updates one or more column values for a given row to the Cassandra table. It does not return anything.update does not allow to update primary key column.    
+
+UPDATE student_info SET StudName = 'David Sheen'
+WHERE RollNo = 2;   
+
+J)Delete:
+To delete the column “LastExamPercent” from the “student_info” table for the record where the RollNo = 2.  
+
+Note:
+Delete statement removes one or more columns from one or more rows of a Cassandra table or removes entire rows if no columns are specified.   
+
+Outcome:
+cqlsh:students> DELETE LastExamPercent FROM student_info where RolÎNo=2;
+cqlsh:students> select * from student_info where rollno = 2;
+lastexampercent value becomes null .   
+
+K)Objective: To delete a row (where RollNo = 2) from the table student_info"
+Act:
+DELETE FROM student_ info WHERE RollNo=2;   
+
+K1)int,double(for decimal no.),timestamp(date plus time), text, list, map, set   
+
+L)ex:2
+a)CREATE TABLE project _ details(
+project_id int,
+project _name text,
+stud_name text,
+rating double,
+duration int,
+PRIMARY KEY (project_id, project _name));  
+
+
+b)Objective: To sort or order the rows/ records of the "project _details" column in descending order of project_name.
+Act:
+SELECT * FROM project _details WHERE project _ id IN (1,2)
+ORDER BY project _name DESC;   
+
+ORDER BY clause can select a single column only. This column is the second column of the compound primary kcy. This applies cven when the compound primary key has more than two columns.   
+
+M)a)Collections - Set:
+i)To alter the schema for the table “student_info” to add a column “hobbies”.  
+
+ALTER TABLE student_info ADD hobbies set<text>;   
+
+ii)To update the table “student_info” to provide the values for “hobbies” for student with Rollno =1.   
+
+UPDATE student_info SET hobbies = hobbies + {'Chess, Table
+Tennis'} WHERE RollNo=1;  
+
+b)Collections - List:
+When the order of elements matter, one should go for a list collection. For eg, when you store the preferences of places to visit by a user. List also allows duplicates.   
+
+i)To alter the schema of the table “student_info” to add a list column “language”.  \n 
+
+ALTER TABLE student_info ADD language list<text>;   
+
+ii)To update values in the list column, “language” of the table “student_info”.   
+
+UPDATE student_info SET language = language + ['Hindi,English'] WHERE RollNo=1;   
+
+N)example for set and list:
+i)Objective: To create a table "users" with an "emails" column. The type of this column "emails" is "set".   
+
+CREATE TABLE users(
+user _id text PRIMARY KEY,
+first _ name text,
+last _name text,
+emails set<text>
+);   
+
+
+ii)Objective: To insert values into the "emails" column of the users table.
+Note: Set values must be unique.
+Act:
+INSERT INTO users (user _ id, first _ name, last _name, emails) VALUES(AB', 'Albert', 'Baggins', {'a@baggins.com', 'baggins@ gmail.com'});   
+
+iii)Objective: Add an element to set using the UPDATE command and the addition (+) operator.\n
+
+UPDATE users SET emails = emails + {'ab@friendsofmordor.org'} WHERE user_id='AB';   
+
+iv)Objective: To retrieve email addresses for Albert from the set.
+Act:
+SELECT user_id, emails FROM users WHERE user_id = 'AB';
+Outcome:
+user_id
+emails
+AB | {'a@baggins.com', 'ab@friendsofmordor.org', 'baggins@gmail.com}    
+
+v)Objective: To remove an element from a set using the subtraction (-) operator.
+Act:
+UPDATE users SET emails = emails - {'ab@friendsofmordor.org'} WHERE user_id ='AB';
+
+vi)Objective: To remove all elements from a set by using the UPDATE or DELETE statement.
+Act: UPDATE users SET emails={} WHERE user_id = 'AB';\n OR
+DELETE emails FROM users WHERE user_id= 'AB';
+
+vii)Objective: To remove an element from a list using the DELETE command and the list index position\n
+
+DELETE top_ places[3] FROM users WHERE user_id = 'AB';
+
+viii)To alter the "users" table to add a column, "top_ places" of type list.\n
+ALTER TABLE users ADD top_places list<text>;
+
+ix)To update the list column "top_ places" in the "users" table for user _id = 'AB \n
+UPDATE users
+SET top_places = ['Lonavla', 'Khandala'] WHERE user _id = 'AB';
+
+x)Prepend an element to the list by enclosing it in square brackets and using the addition (+) operator. \n
+
+UPDATE users SET top_places = ['Mahabaleshwar' ]+ top_places WHERE user_id= 'AB';
+
+xi)Objective: To append an element to the list by switching the order of the new element data and the list name in the update command.\n
+UPDATE users SET top_places = top_places + [ 'Tapola'] WHERE user_id = 'AB';
+
+xii)Objective: To sort or order the rows/records of the "project _details" column in descending order of project_name\n
+Act:SELECT * FROM project _ details WHERE project _id IN (1,2) ORDER BY project_name DESC;
+
+N1)Using Map: Key, Value Pair\n
+i)Objective: To alter the "users" table to add a map column "todo"
+Act:ALTER TABLE users ADD todo map<timestamp, text>;
+
+ii)Objective: To update record for user (user_id ="AB') in the users table.
+
+UPDATE users SET todo = {'2014-9-24': 'Cassandra Session',
+'2014-10-2 12:00':'MongoDB Session'} WHERE user_id ='AB';
+
+op:r_id|todo\n
+AB | {'2014-09-24 00:00:00India Standard Time':'Cassandra Session',
+'2014-10-02  12:00:00India standard Time':  'MongoDB Session'}
+
+
+iii)Objective: To delete an element from the map using the DELETE command and enclosing the timestamp of the element in square brackets.\n
+
+DELETE todo['2014-9-24'] FROM users WHERE user_id = 'AB';
+
+
+O)USING A COUNTER:
+A counter is a special column that is changed in increments. ex:we may need a counter column to count the number of times a particular book is issued from the library by the student.\n
+
+CREATE TABLE library book (
+counter_value counter,
+book_name varchar,
+stud_name varchar,
+PRIMARY KEY (book name, stud name)
+);\n
+
+UPDATE library_book SET counter_ value = counter_value + 1 WHERE book_name='Fundamentals of Business Analytics' AND stud_name='jeet';\n
+
+
+P)TIME TO LIVE (TTL):
+Data in a column, other than a counter column, can have an optional expiration period called TTL (time to live). The client request may specify a TTL value for the data. TTL is specified in seconds.\n
+
+CREATE TABLE userlogin(userid int primary key, password text);\n
+INSERT INTO userlogin (userid, password)VALUES (1,'infy') USING TTL 30;\n
+SELECT TTL (password)FROM userlogin WHERE userid=1;\n
+op:ttl(password)\n
+18
+
+Q)i)Alter Table to Change the Data Type of a Column:
+ALTER TABLE sample ALTER sample_id TYPE int;
+ii)Alter Table to Delete a Column
+-following command is not executed successfully bcoz sample_id is primary key.\n
+ALTER TABLE sample DROP sample_id;\n
+
+iii)Drop the column "sample_name" from the table sample"
+
+ALTER TABLE sample DROP sample_name;
+
+iv)Drop a Table:DROP columnfamily table_name;
+
+v)Drop database:DROP keyspace database_name
+
+R)EXPORT TO CSV:
+
+Objective: Export the contents of the table/column family "elearning" present in the "students" database to a CSV file (d:\elearninglists.csv).\n
+
+COPY elearning (id, course _order, course _id, courscowner, title) TO 'd:\elearninglists.csv';
+
+S)IMPORT FROM CSV:
+Objective: To import data from "D:\elearninglists. csv" into table  "elearning"  present in the "students" database.
+
+step 1: TRUNCATE elearning;(optional)
+step 2: COPY elearninglists (id, course _ order, course _ id, courseowner, title) FROM 'd:\elearninglists. csv';\n
+
+T)Import from STDIN:
+Objective: To import data into an existing table "persons" present in the "students" database. The data is to be provided by the user using the standard input device.\n
+
+CREATE TABLE persons(
+id int ,
+fname text,
+lname text,
+PRIMARY KEY (id)
+)
+
+COPY persons (id, fname, lname) FROM STDIN;\n
+
+U)Export to STDOUT:
+
+COPY elearning (id, course_order, course_ id, courseowner, title) TO STDOUT;

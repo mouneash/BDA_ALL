@@ -1,0 +1,435 @@
+[U41)A)Write the output of the following scala operations
+1. val s = "Hello", s(4) //Prints o
+2. 1.to(10) // Yields Range(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+3. val xmax, ymax = 100 // Declares and initialize xmax and ymax to 100
+4. val s=if (n > 0) { r = r * n; n -= 1 }(Given r=1 n=4) // 24
+def decorate(str: String, left: String = "[", right: String = "]") =left + str + right,  \n
+decorate("Hello") //[Hello]
+
+
+B)Scala program to return largest number among two numbers?
+sol:object ExampleUDFToGetLargestNumber {\n
+-def getLargestNumber(x: Int, y: Int) : Int ={\n
+--var largestNumber: Int=0;\n
+--if(x>y)\n
+---largestNumber=x;\n
+--else\n
+---largestNumber=y;\n
+--return largestNumber;\n
+}\n
+-def main(args: Array[String]) {\n
+--var a: Int=10;\n
+--var b: Int=20;\n
+--println("Largest number from "+ a+" and "+ b +" is: "+ getLargestNumber(a,b));\n
+-}
+}
+
+[U45)examples1?
+i)scala> 8 * 5 + 2\n
+res0: Int = 42\n
+scala> "Hello, " + res0\n
+res2: java.lang.String = Hello, 42\n
+ii)When calling methods, try using tab completion for method names.
+Type res2.to and then hit the Tab key.If the interpreter offers choices such as toCharArray ,toLowerCase, toString ,toUpperCase this means tab completion works in your environment.Scala interpreter reads an expression, evaluates it, prints it, and reads the next expression.This is called the read-eval-print loop, or REPL.
+iii)Declaring Values and Variables?
+scala> val answer = 8 * 5 + 2\n
+answer: Int = 42\n
+//val for constants.can’t change its contents.\n
+To declare a variable whose contents can vary,use var:\n
+var counter = 0\n
+iv)you can specify the type if necessary.\n
+ex:val greeting: String = null\n
+val greeting: Any = "Hello"\n
+v)val xmax, ymax = 100 // Sets xmax and ymax to 100\n
+var greeting, message: String = null\n
+vi)You can invoke methods on numbers.\n
+ex:1.toString() // Yields the string "1"\n
+1.to(10) // Yields Range(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).Int value 1 is first converted to a RichInt, and to method is applied to that value.\n
+"Hello".intersect("World") // Yields "lo“\n
+a + b is a shorthand for a.+(b)\n
+a method b as a shorthand for a.method(b)\n
+instead of 1.to(10) you can write 1 to 10\n
+vii)If the method has no parameters, you don’t have to use parentheses.\n
+Call it as "Bonjour".sorted // Yields the string "Bjnooru"\n
+viii)import scala.math._ // In Scala, the _ character is a “wildcard,” like * in Java\n
+sqrt(2) // Yields 1.4142135623730951\n
+pow(2, 4) // Yields 16.0\n
+min(3, Pi) // Yields 3.0\n
+If you don’t import the scala.math package, add the package name: 
+scala.math.sqrt(2)\n
+ix)val s = "Hello"\n
+s(4) // Yields 'o’\n
+s(4) is a shortcut for s.apply(4)\n
+x)Conditional Expressions:
+if (x > 0) 1 else -1\n
+val s = if (x > 0) 1 else -1\n
+xi)Any?
+In Scala, every expression has a type.\n
+ex: expression if (x > 0) 1 else -1 has the type Int because both branches have the type Int.\n
+The type of a mixed-type expression, such as if (x > 0) "positive" else -1
+is the common supertype of both branches.
+ex:one branch is ajava.lang.String, and the other an Int. Their common supertype is called Any.\n
+xii)if statement without an else is equivalent to if (x > 0) 1 else ()\n
+xiii)nested if else:\n
+ex:if (x > 0) { 1\n
+} else if (x == 0) 0 else -1\n
+xiv)semicolons?
+if you want to have more than one statement on a single line, you need to separate them with semicolons.\n
+if (n > 0) { r = r * n; n -= 1 }\n OR
+if (n > 0) {\n
+r = r * n\n
+n -= 1\n
+}\n
+xv)a { } block contains a sequence of expressions, and the result is
+also an expression.\n
+val distance = { val dx = x - x0; val dy = y - y0; sqrt(dx * dx + dy * dy) }
+xvi)print, println, printf?
+print("Answer: ")\n
+println(42)\n
+yields the same output as\n
+println("Answer: " + 42)\n
+printf("Hello, %s! You are %d years old.\n", name, age)\n
+xvii)for?
+for (i <- 1 to n)\n
+r = r * i//call 1 to n returns Range of numbers from 1 to n (inclusive).\n
+ex:When traversing a string, you can loop over the index values:\n
+val s = "Hello"\n
+var sum = 0\n
+for (i <- 0 to s.length - 1)\n
+sum += s(i)\n
+xviii)Advanced for Loops?
+ex1:for (i <- 1 to 3; j <- 1 to 3) print(f"${10 * i + j}%3d")\n
+// Prints 11 12 13 21 22 23 31 32 33\n
+ex2:Each generator can have a guard, a Boolean condition preceded by if:\n
+for (i <- 1 to 3; j <- 1 to 3 if i != j) print(f"${10 * i + j}%3d")\n
+// Prints 12 13 21 23 31 32\n
+Note that there is no semicolon before the if.
+ex3:You can have any number of definitions, introducing variables that can be used inside the loop:\n
+for (i <- 1 to 3; from = 4 - i; j <- from to 3) print(f"${10 * i + j}%3d")\n
+// Prints 13 22 23 31 32 33\n
+ex4:When the body of for loop starts with yield, the loop constructs a collection of values, one for each iteration.This type of loop is called a for comprehension.\n
+for (i <- 1 to 10) yield i % 3\n
+// Yields Vector(1, 2, 0, 1, 2, 0, 1, 2, 0, 1)\n
+The generated collection is compatible with the first generator.
+for (c <- "Hello"; i <- 0 to 1) yield (c + i).toChar\n
+// Yields "HIeflmlmop"
+for (i <- 0 to 1; c <- "Hello") yield (c + i).toChar\n
+// Yields Vector('H', 'e', 'l', 'l', 'o', 'I', 'f', 'm', 'm', 'p')\n
+ex5:you can enclose the generators, guards, and definitions of a
+for loop in braces, and you can use newlines instead of semicolons to
+separate them:\n
+for { i <- 1 to 3\n
+from = 4 - i\n
+j <- from to 3\n }
+xix)Functions\n
+ex1:To define a function, specify function’s name, parameters, and body.
+def abs(x: Double) = if (x >= 0) x else -x\n
+If body of the function requires more than one expression, use a block.
+last expression of  block becomes the value that the function returns.
+As long as function is not recursive, you need not specify return type.\n
+ex2:def fac(n : Int) = {\n
+var r = 1\n
+for (i <- 1 to n) r = r * i\n
+r\n
+}
+ex3:def fac(n: Int): Int = if (n <= 0) 1 else n * fac(n - 1)\n
+]
+[U46)examples 2?
+sol:a)Default and Named Arguments:
+ex1:def decorate(str: String, left: String = "[", right: String = "]") =
+left + str + right\n
+If you call decorate("Hello"), you get "[Hello]".\n
+if u call decorate("Hello", "<<<", ">>>"), u get "<<<Hello>>>"\n
+You can also specify the parameter names when you supply the
+arguments.\n
+decorate(left = "<<<", str = "Hello", right = ">>>")\n
+result is "<<<Hello>>>". Note that the named arguments need not be in same order as the parameters.\n
+]
+
+[U47)Variable Arguments?
+a)def sum(args: Int*) = {\n
+var result = 0\n
+for (arg <- args) result += arg\n
+result\n
+}
+val s = sum(1, 4, 9, 16, 25)\n
+function receives a single parameter of type Seq.\n
+val s = sum(1 to 5) // Error\n
+val s = sum(1 to 5: _*) // Consider 1 to 5 as an argument sequence\n
+]
+
+[U48)A)Procedures?
+Scala has a special notation for a function that returns no value. If the function body is enclosed in braces without a preceding = symbol, then return type is Unit.Such a function is called a procedure.ex:following procedure prints a string inside a box, like\n
+-------\n
+|Hello|\n
+------- Since the procedure doesn’t return any value, we omit the = symbol\n
+def box(s : String) {\n
+val border = "-" * (s.length + 2)\n
+print(f"$border%n|$s|%n$border%n") }
+B)Lazy Values?
+When a val is declared as lazy, its initialization is deferred until it is accessed for first time.\n
+ex:lazy val words = scala.io.Source.fromFile("/usr/share/dict/words").mkString\n// Evaluated the first time words is used.\n
+If program never accesses words, file is never opened.To verify this, try it out in the REPL, but misspell the file name.There will be no error when the initialization statement is executed.However, if you access words, you will get an error message that the file is not found.You can think of lazy values as halfway between val and def.
+C)Exceptions?
+When you throw an exception,ex:\n
+throw new IllegalArgumentException("x should not be negative")\n
+current computation is aborted, and runtime system looks for exception handler that can accept an IllegalArgumentException.\n
+Control resumes with the innermost such handler.If no such handler exists, the program terminates.A throw expression has special type Nothing.
+That is useful in if/else expressions.\n
+If one branch has type Nothing, type of  if/else expression is type of other branch.ex:\n
+if (x >= 0) { sqrt(x)\n
+} else throw new IllegalArgumentException("x should not be negative")\n
+first branch has type Double,  second has type Nothing.so, if/else expression also has type Double.\n
+syntax for catching exceptions is modeled after pattern matching syntax.\n
+val url = new URL("http://horstmann.com/fred-tiny.gif")\n
+try {\n
+process(url)\n
+} catch {\n
+case _: MalformedURLException => println(s"Bad URL: $url")\n
+case ex: IOException => ex.printStackTrace()\n
+}\n
+try/finally statement lets you dispose of a resource whether or not an
+exception has occurred.ex:\n
+val in = new URL("http://horstmann.com/fred.gif").openStream()\n
+try {\n
+process(in)\n
+} finally {\n
+in.close()
+}\n
+finally clause is executed whether or not the process function throws an
+exception. reader is always closed.\n
+try/catch statement handles exceptions, and the try/finally statement
+takes some action when an exception is not handled.
+]
+[U49)A)signum of a number is 1 if the number is positive, –1 if it is negative, and 0 if it is zero. Write a function that computes this value.
+sol:def signum1(x: Int) = if (x == 0) 0 else if (x < 0) -1 else 1\n
+B)What is value of an empty block expression {}? What is its type?
+sol:Unit is a subtype of scala.AnyVal. There is only one value of type Unit, (), and it is not represented by any object in the underlying runtime system. A method with return type Unit is analogous to a Java method which is declared void.So, Unit is a sort of placeholder meaning no useful value.
+C)Come up with one situation where the assignment x = y = 1 is valid in Scala.
+sol:Since in scala an assignment does return nothing (vs C-like languages), x needs to be of type Unit.\n
+var x = {} //> res: x = Unit ()\n
+var y = 0 //> res: y = 0\n
+x = y = 1\n
+D)Write a Scala equivalent for the Java loop\n
+for (int i = 10; i >= 0; i--) System.out.println(i);
+sol:for (i <- 0 to 10 reverse) println(i)\n
+(OR)\n
+Using by to control the increment:\n
+for (i <- 10 to 0 by -1) println(i)\n
+E)Write a procedure countdown(n: Int) that prints the numbers from n to 0.
+sol:i)/* Using a for loop */
+def countdown1(x: Int) =\n
+-for (i <- x to 0 by -1) println(i)\n
+
+ii)/* Using recursion */
+def countdown2(x: Int): Unit = if (x > 0) {\n
+- println(x)\n
+- countdown2(x - 1)\n
+}
+F)Write a for loop for computing the product of the Unicode codes of all letters in a string. For example, the product of the characters in “Hello” is 825152896.
+sol:def unicodeProduct(s: String) = {\n
+-var i = 1\n
+-for (c <- s) i *= c.toInt\n
+-i\n
+}
+]
+
+[U410)A)Fixed-Length Arrays:
+val nums = new Array[Int](10)// An array of ten integers, all initialized with zero\n
+val a = new Array[String](10)// A string array with ten elements, all initialized with null\n
+val s = Array("Hello", "World")// An Array[String] of length 2—the type is inferred.// Note: No new when you supply initial values.
+B)Variable-Length Arrays: Array Buffers?
+import scala.collection.mutable.ArrayBuffer\n
+val b = ArrayBuffer[Int]()\n
+b += 1 // ArrayBuffer(1)\n
+b += (1, 2, 3, 5)// ArrayBuffer(1, 1, 2, 3, 5)\n
+b.insert(2, 6)\n
+ArrayBuffer(1, 1, 6, 2)// Insert before index 2\n
+b.insert(2, 7, 8, 9)\n
+ArrayBuffer(1, 1, 7, 8, 9, 6, 2)// You can insert as many elements as you like.\n
+b.remove(2)// ArrayBuffer(1, 1, 8, 9, 6, 2)\n
+b.remove(2, 3)\n
+// The second parameter tells how many elements to remove\n
+// ArrayBuffer(1, 1, 2)
+C)i)Traversing Arrays and Array Buffers\n
+for (i <- 0 until a.length)//variable i goes from 0 to a.length – 1\n
+println(s"$i: ${a(i)}")\n
+To visit every second element, let i traverse 0 until a.length by 2// Range(0, 2, 4, ...).\n
+ii)Transforming Arrays:
+val a = Array(2, 3, 5, 7, 11)\n
+val result = for (elem <- a) yield 2 * elem\n
+// result is Array(4, 6, 10, 14, 22)\n
+iii)when you traverse a collection, you only want to process the elements
+that match a particular condition.This is achieved with a guard: an if inside the for.\n
+Here we double every even element, dropping the odd ones:
+for (elem <- a if elem % 2 == 0) yield 2 * elem\n
+Keep in mind that the result is a new collection—the original collection is not affected.\n
+iv)Suppose we want to remove all negative elements from an array
+buffer of integers.\n
+val result = for (elem <- a if elem >= 0) yield elem\n
+Suppose that we want to modify the original array buffer instead, removing the unwanted elements.Then we can collect their positions:\n
+val positionsToRemove = for (i <- a.indices if a(i) < 0) yield i\n
+Now remove the elements at those positions, starting from the back:\n
+for (i <- positionsToRemove.reverse) a.remove(i)\n
+v)Common Algorithms:\n
+1. Array(1, 7, 2, 9).sum\n
+2. ArrayBuffer("Mary", "had", "a", "little", "lamb").max\n
+// "little\n
+3. val b = ArrayBuffer(1, 7, 2, 9)\n
+val bSorted = b.sorted\n
+4. the mkString:method lets you specify the separator between elements\n
+a.mkString(" and ")\n
+// "1 and 2 and 7 and 9"\n
+a.mkString("<", ",", ">")\n
+// "<1,2,7,9>"\n
+vi)Multidimensional Arrays:
+val matrix = Array.ofDim[Double](3, 4) // Three rows, four columns\n
+matrix(row)(column) = 42
+D)i)Map?
+val scores = Map("Alice" -> 10, "Bob" -> 3, "Cindy" -> 8)\n
+This constructs an immutable Map[String, Int] whose contents can’t be
+changed.\n
+If you want a mutable map, use\n
+val scores = scala.collection.mutable.Map("Alice" -> 10, "Bob" -> 3,
+"Cindy" -> 8)\n
+to start out with a blank map, you have to supply type parameters:\n
+val scores = scala.collection.mutable.Map[String, Int]()\n
+Accessing Map Values:val bobsScore = scores("Bob")
+To check whether there is a key with the given value, call the contains
+method:\n
+val bobsScore = if (scores.contains("Bob")) scores("Bob") else 0\n
+Updating Mutable Map Values/Adding new values:\n
+scores += ("Bob" -> 10, "Fred" -> 7)\n
+To remove a key and its associated value, use the -= operator:\n
+scores -= "Alice“\n
+You can’t update an immutable map, but you can do something that’s
+just as useful—obtain a new map that has the desired update:\n
+val newScores = scores + ("Bob" -> 10, "Fred" -> 7) // New map with update\n
+-newScores map contains same associations as scores, except that "Bob" has been updated and "Fred" added.
+ii)Iterating over Maps:\n
+iterates over all key/value pairs\n
+for ((k, v) <- map) process k and v\n
+to visit only the keys or values:\n
+scores.keySet // A set such as Set("Bob", "Cindy", "Fred", "Alice")\n
+for (v <- scores.values) print(v) // Prints 10 8 7 10\n
+To reverse a map—that is, switch keys and values—use\n
+for ((k, v) <- map) yield (v, k)\n
+E)Tuples\n
+tuple value is formed by enclosing individual values in parentheses.\nex:(1, 3.14, "Fred")
+is a tuple of type Tuple3[Int, Double, java.lang.String]\n
+If you have a tuple, say,\n
+val t = (1, 3.14, "Fred")\n
+then you can access its components with the methods _1, _2, _3, for ex:\n
+val second = t._2 // Sets second to 3.14\n
+Unlike array or string positions, the component positions of a tuple
+start with 1, not 0.\n
+F)Zipping:
+One reason for using tuples is to bundle together values so that they can be processed together.This is commonly done with the zip method. 
+ex:val symbols = Array("<", "-", ">")\n
+val counts = Array(2, 10, 2)\n
+val pairs = symbols.zip(counts)\n
+yields an array of pairs\n
+Array(("<", 2), ("-", 10), (">", 2))\n
+for ((s, n) <- pairs) print(s * n) // Prints <<---------->>
+]
+[U411)A)Write a code snippet that sets a to an array of n random integers between 0 (inclusive) and n (exclusive).
+sol:def randomArray(length: Int, min: Int, max: Int) = {\n
+-import scala.util.{Random => R}\n
+-if (min >= max) sys.error("min should be < max")\n
+-(for (_ <- 0 until length)
+--yield min + (R.nextDouble() * (max - min)).toInt
+--).toArray\n
+}\n
+op:randomArray(10, 10, 20) //> Array(11, 15, 14, 19, 15, 14, 19, 14, 16, 17)\n
+B)Write a loop that swaps adjacent elements of an array of integers. For example, Array(1, 2, 3, 4, 5) becomes Array(2, 1, 4, 3, 5).
+sol:def swap[T](array: Array[T]) = {
+-for (i <- 0 until array.length - 1 by 2) {
+--val temp = array(i)
+--array(i) = array(i + 1)
+--array(i + 1) = temp
+  }
+-array\n
+}\n
+op:var l1 = (0 to 10).toArray\n
+swap(l1) //> Array(1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 10)
+C)Repeat the preceding assignment, but produce a new array with the swapped values. Use for/yield.
+sol:def swapList[T](list: List[T]) = {\n
+-(for (i <- 1 until list.length + 1 by 2;j <- (i - 1 to i reverse) if j < list.length)\n
+--yield j
+--).toList
+}
+op:swapList(0 to 10 toList) //> List(1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 10)\n
+D)Given an array of integers, produce a new array that contains all positive values of the original array, in their original order, followed by all values that are zero or negative, in their original order.
+sol:def positiveFirst1(list: List[Int]) = {\n
+-val pos = list.filter((_: Int) > 0)\n
+-val neg = list.filterNot((_: Int) > 0)\n
+-pos ++ neg\n
+}
+op:val randomL = List(3, -5, 7, -4, 2, -10, -9, 0, 9, -10)\n
+positiveFirst1(randomL) //> List(3, 7, 2, 9, -5, -4, -10, -9, 0, -10)
+E)compute the average of an Array[Double]?
+sol:def avg(list: List[Double]) = {\n
+-list.sum / list.length\n
+}
+
+\n
+avg({\n
+-for (i <- 0 to 10) yield scala.util.Random.nextDouble()\n
+}.toList)\n
+F)How do you rearrange the elements of an Array[Int] so that they appear in
+reverse sorted order?
+sol:def reverseSort1(array : Array[Int]) = array.sorted.reverse
+G)Write a code snippet that produces all values from an array with duplicates removed. (Hint: Look at Scaladoc.)
+sol:var dupl = (0 to 10) ++ (1 to 11)\n
+dupl.distinct
+H)Make a collection of all time zones returned by java.util.TimeZone.getAvailableIDs that are in America. Strip off the “America/“ prefix and sort the result.
+sol:def americanTz = {
+-for (tz <- java.util.TimeZone.getAvailableIDs
+--if tz.startsWith("America"))
+-yield tz.replace("America/", "")
+}\n
+americanTz
+]
+[U412)A)Set up a map of prices for a number of gizmos that you covet. Then produce a second map with the same keys and the prices at a 10 percent discount.
+sol:val whishlist2 = Map(\n
+-"this" -> 10,\n
+-"that" -> 25,\n
+-"and that" -> 123.1\n
+)\n
+for ((k, v) <- wishlist1) yield (k, v * .9)
+
+[U413)A)Scala Example: If Statement  \n
+var age:Int = 20; \n 
+if(age > 18){  \n
+---println ("Age is greate than 18")  \n
+} \n 
+B)Scala Function Declaration Syntax:\n
+def functionName(parameters : typeofparameters) : returntypeoffunction = { \n 
+// statements to be executed  \n
+}  \n
+C)prime number program in Scala:\n
+object PrimeNumber {\n
+--def isPrime(n: Int): Boolean = {\n
+----if (n <= 1) false\n
+----else if (n == 2) true \n
+----else !(2 to (n-1)).exists(x => n % x == 0) \n
+--}
+\n
+--def main(args: Array[String]) {\n
+----val num = 23  \n
+----if (isPrime(num)) println(s"$num is a prime number.")  \n
+----else println(s"$num is not a prime number.")  \n
+--}\n
+}
+
+D)list is a palindrome or not.?
+sol:object Scala_List {\n
+--def is_Palindrome[A](list_nums: List[A]):Boolean = {\n
+----list_nums == list_nums.reverse \n
+}\n
+----def main(args: Array[String]): Unit = {\n
+------println("Result: " + is_Palindrome(List(1,2,3,4,3,2,1))); \n
+------println("Result: " + is_Palindrome(List(1,2,3))); \n
+----}\n
+}
+
